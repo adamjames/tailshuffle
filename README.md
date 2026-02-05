@@ -57,10 +57,14 @@ Note that the crawler outputs to `html/ui-blocks/`, not `html/components/` as th
 **Step 3** — Brand the library metadata (optional):
 ```bash
 unzip output.zip shuffle.config.json
+
+# shuffle reads this to display the library name/description in their UI
 sed -i \
   -e 's|Tailwind UI all components|you@example.com|' \
   -e 's|Tailwind UI All|Tailwind UI Pro|' \
   shuffle.config.json
+
+# delete and re-add to avoid stored vs deflated warnings
 zip -d output.zip shuffle.config.json
 zip output.zip shuffle.config.json
 ```
