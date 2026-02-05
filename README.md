@@ -1,9 +1,7 @@
 # Tailshuffle.sh
-Some nice wrapping to help you use [Tailwind Pro](https://tailwindcss.com) with [Shuffle.dev](https://shuffle.dev).
+Some nice wrapping to help you use [Tailwind Pro](https://tailwindcss.com) with [Shuffle.dev](https://shuffle.dev). 
 
-The two upstream tools — `tailwindui-crawler` and `shuffle-package-maker` — each do their own job well. The [crawler](https://github.com/kiliman/tailwindui-crawler) downloads Tailwind UI components; [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into shuffle.dev's custom library format.
-
-The manual steps are straightforward enough - this repository ties it all together with some script glue, fixes and polish, running the whole lot inside of Docker or Podman to keep your machine clean.
+Many thanks of course to @tailwindlabs for their years of love poured into Tailwind (go buy it!) and @kiliman and @shuffle-dev for the code that does 90% of the heavy lifting here. [tailwindui-crawler](https://github.com/kiliman/tailwindui-crawler) (obviously) downloads the components; [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into shuffle.dev's custom library format. The manual steps are straightforward enough, this repository ties it all together with some script glue, fixes and polish, running the whole lot inside of Docker or Podman to keep your machine clean.
 
 ## Usage
 
