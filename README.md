@@ -3,8 +3,11 @@ Some nice wrapping to help you use [Tailwind Pro](https://tailwindcss.com) with 
 
 Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for their years of love poured into Tailwind (go buy it!) and [@kiliman](https://github.com/kiliman) and [@shuffle-dev](https://github.com/nickytonline/shuffle-dev) for the code that does 90% of the heavy lifting here. [tailwindui-crawler](https://github.com/kiliman/tailwindui-crawler) downloads the components; [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into Shuffle's custom library format. The manual steps are straightforward enough, this repository ties it all together with some script glue, fixes and polish, running the whole lot inside of Docker or Podman to keep your machine clean.
 
-## Usage
+## Notice
+Using this tool requires an active [Tailwind Plus](https://tailwindcss.com/plus) subscription. 
+You are responsible for complying with the [terms of service](https://tailwindcss.com/plus/terms).
 
+## Usage
 ```bash
 ./tailshuffle.sh              # show help, offer to run full pipeline
 ./tailshuffle.sh all          # full interactive pipeline
@@ -21,13 +24,11 @@ Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for th
 The final output is `tailwind-shuffle-components.zip`, ready to upload. Downloaded components are cached in `cache/` so subsequent builds skip the download.
 
 ## Debugging
-
-- **Login fails** — check your subscription at tailwindcss.com/plus; escape special characters in password (e.g. `\$`)
+- **Login fails** — check your [subscription](https://tailwindcss.com/plus); escape special characters in your password (e.g. `\$`)
 - **Empty output** — check `cache/` for downloaded files; try `DEBUG=1` in `.env`
 - **Missing components** — set `COMPONENTS=all` and `FORCE_UPDATE=1` in `.env`
 
 ## Manual Steps
-
 **Step 1** — Download components with tailwindui-crawler:
 
 ```bash
@@ -42,7 +43,6 @@ npm start
 This gives you files in `./output/html/ui-blocks/{marketing,application-ui,ecommerce}/...`
 
 **Step 2** — Convert with shuffle-package-maker:
-
 ```bash
 npm install shuffle-package-maker
 npx shuffle-package-maker /path/to/tailwindui-crawler/output/html/components --preset=tailwindui
@@ -52,10 +52,5 @@ Note that the crawler outputs to `html/ui-blocks/`, not `html/components/` as th
 
 **Step 3** — Zip the output and [upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
 
-## Notice
-
-Using this tool requires an active [Tailwind UI](https://tailwindcss.com/plus) subscription. You are responsible for complying with their [terms of service](https://tailwindcss.com/plus/terms).
-
 ## License
-
 MIT — see [LICENSE](LICENSE).
