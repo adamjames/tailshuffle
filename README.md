@@ -32,14 +32,16 @@ The final output is `tailwind-shuffle-components.zip`, ready to upload. Download
 - **Missing components** — set `COMPONENTS=all` and `FORCE_UPDATE=1` in `.env`
 
 ## Manual Steps
+If you already have node/npx ready to go, you can replicate most of what the pipeline does by hand:
+
 **Step 1** — Download components with tailwindui-crawler:
 
 ```bash
 git clone https://github.com/kiliman/tailwindui-crawler.git
 cd tailwindui-crawler
+patch -p1 < /path/to/fix-crawler-deps.patch  # security fix for upstream dep
 npm install
-# create .env with EMAIL, PASSWORD, LANGUAGES=html, etc.
-# .env.example can be used as a starting point.
+# create .env based on .env.example
 npm start
 ```
 
@@ -47,10 +49,32 @@ This gives you files in `./output/html/ui-blocks/{marketing,application-ui,ecomm
 
 **Step 2** — Convert with shuffle-package-maker:
 ```bash
-npm install shuffle-package-maker
-npx shuffle-package-maker /path/to/tailwindui-crawler/output/html/components --preset=tailwindui
+npx shuffle-package-maker /path/to/tailwindui-crawler/output/html/ui-blocks --preset=tailwindui
 ```
 
 Note that the crawler outputs to `html/ui-blocks/`, not `html/components/` as the shuffle-package-maker docs suggest.
 
-**Step 3** — Zip the output and [upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
+**Step 3** — Brand the library metadata (optional):
+```bash
+unzip output.zip shuffle.config.json
+sed -i \
+  -e 's|Tailwind UI all components|you@example.com|' \
+  -e 's|Tailwind UI All|Tailwind UI Pro|' \
+  shuffle.config.json
+zip -d output.zip shuffle.config.json
+zip output.zip shuffle.config.json
+```
+
+**Step 4** — Generate a component catalog for LLMs (optional):
+```bash
+node catalog.mjs
+```
+
+**Step 5** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
+
+### What the pipeline adds
+
+Beyond orchestrating the above, the script:
+
+- **Runs everything in Docker/Podman** — no Node.js install needed, no leftover dependencies
+- **Caches downloads** in `cache/` so you can rebuild without re-downloading
