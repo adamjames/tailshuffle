@@ -155,7 +155,7 @@ node catalog.mjs
       "with_dropdown_product_filters",
       "with_expandable_product_filter_panel",
 <snip>
-``
+```
 
 **Step 7** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded) and make pages.
 
