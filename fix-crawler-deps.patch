@@ -1,0 +1,25 @@
+# Remove unused runtime deps (cookie, form-urlencoded, glob) and force
+# tmp to >=0.2.4 to fix a symlink-based arbitrary file write vulnerability
+# in the all-contributors-cli → inquirer → external-editor → tmp chain.
+# external-editor pins tmp@^0.0.33, which semver locks to <0.1.0 and
+# can never reach the patched 0.2.x line without an override.
+# https://github.com/advisories/GHSA-52f5-9888-hmc6
+--- a/package.json
++++ b/package.json
+@@ -17,13 +17,13 @@
+   },
+   "dependencies": {
+     "cheerio": "^1.0.0",
+-    "cookie": "^0.7.1",
+     "dotenv": "^16.4.5",
+     "dotenv-expand": "^11.0.6",
+-    "form-urlencoded": "^6.1.5",
+-    "glob": "^8.1.0",
+     "string.prototype.matchall": "^4.0.11"
+   },
++  "overrides": {
++    "tmp": "^0.2.4"
++  },
+   "bin": "./index.mjs",
+   "engines": {
+     "node": ">=16.0.0"
