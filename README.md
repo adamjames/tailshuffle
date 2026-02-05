@@ -5,7 +5,7 @@ Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for th
 
 ## Notice
 Using this tool requires an active [Tailwind Plus](https://tailwindcss.com/plus) subscription. 
-You are responsible for complying with the [terms of service](https://tailwindcss.com/plus/license)
+In particular, you are responsible for complying with the [terms of service](https://tailwindcss.com/plus/license).
 
 ## License
 MIT — see [LICENSE](LICENSE).
