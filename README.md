@@ -49,7 +49,7 @@ patch -p1 < /path/to/fix-crawler-deps.patch
 npm install
 ```
 
-The patch modifies `package.json`:
+`npm audit` will report a couple of vulnerabilities. The patch modifies `package.json` to correct them. It:
 
 1. **Removes unused dependencies** — `cookie`, `form-urlencoded`, and `glob` aren't actually used at runtime
 2. **Adds an npm override for `tmp`** — forces version `^0.2.4` instead of the vulnerable `^0.0.33`
