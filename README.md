@@ -1,11 +1,14 @@
 # Tailshuffle.sh
 Some nice wrapping to help you use [Tailwind Pro](https://tailwindcss.com) with [Shuffle.dev](https://shuffle.dev).
 
-Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for their years of love poured into Tailwind (go buy it!) and [@kiliman](https://github.com/kiliman) and [@shuffle-dev](https://github.com/nickytonline/shuffle-dev) for the code that does 90% of the heavy lifting here.
-
-Obviously, [tailwindui-crawler](https://github.com/kiliman/tailwindui-crawler) downloads the components and [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into Shuffle's custom library format.
+Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for their years of love poured into Tailwind (go buy it!) and [@kiliman](https://github.com/kiliman) and [@shuffle-dev](https://github.com/nickytonline/shuffle-dev) for the code that does 90% of the heavy lifting here. Obviously, [tailwindui-crawler](https://github.com/kiliman/tailwindui-crawler) downloads the components and [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into Shuffle's custom library format.
 
 The manual steps are straightforward enough, this repository ties it all together with some script glue, fixes and polish, running the whole lot inside of Docker or Podman to keep your machine clean.
+
+Once you're done, you can build using the Pro components inside of Shuffle as you please.
+
+<img alt="The Shuffle dashboard showing an uploaded component pack" src="https://github.com/user-attachments/assets/93c08fda-afa6-4e0f-aded-00074a8cd35f" />
+<img alt="An example page using the Tailwind Pro components" src="https://github.com/user-attachments/assets/06df903c-746e-4b3a-8b94-3ebf4dd936e4" />
 
 ## Notice
 Using this tool requires an active [Tailwind Plus](https://tailwindcss.com/plus) subscription.
@@ -109,7 +112,7 @@ zip output.zip shuffle.config.json
 node catalog.mjs
 ```
 
-**Step 7** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
+**Step 7** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded) and make pages.
 
 ### What the pipeline adds
 
