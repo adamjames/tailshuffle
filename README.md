@@ -92,10 +92,70 @@ zip -d output.zip shuffle.config.json
 zip output.zip shuffle.config.json
 ```
 
-**Step 6** — Generate a component catalog for LLMs (optional, but useful for LLM's):
+**Step 6** — Generate a component catalog for LLMs (optional, but useful):
 ```bash
 node catalog.mjs
 ```
+```json
+{
+  "_meta": {
+    "generated": "2026-02-05T22:08:59.571Z",
+    "totalComponents": 611,
+    "source": "output/components",
+    "categories": {
+      "application_shells": 23,
+      "components": 84,
+      "data_display": 19,
+      "elements": 76,
+      "feedback": 17,
+      "forms": 74,
+      "headings": 25,
+      "layout": 38,
+      "lists": 44,
+      "navigation": 54,
+      "overlays": 24,
+      "sections": 133
+    }
+  },
+  "application_shells": {
+    "multi_column": [
+      "constrained_three_column",
+      "constrained_with_sticky_columns",
+      "full_width_secondary_column_on_right",
+      "full_width_three_column",
+      "full_width_with_narrow_sidebar",
+      "full_width_with_narrow_sidebar_and_header"
+    ],
+    "sidebar": [
+      "brand_sidebar_with_header",
+      "dark_sidebar_with_header",
+      "sidebar_with_header",
+      "simple_brand_sidebar",
+      "simple_dark_sidebar",
+      "simple_sidebar",
+      "with_constrained_content_area",
+      "with_off_white_background"
+    ],
+    "stacked": [
+      "brand_nav_with_overlap",
+      "branded_nav_with_compact_lighter_page_header",
+      "branded_nav_with_lighter_page_header",
+      "on_subtle_background",
+      "two_row_navigation_with_overlap",
+      "with_bottom_border",
+      "with_compact_lighter_page_header",
+      "with_lighter_page_header",
+      "with_overlap"
+    ]
+  },
+  "components": {
+    "category_filters": [
+      "sidebar_filters",
+      "with_centered_text_and_dropdown_product_filters",
+      "with_dropdown_product_filters",
+      "with_expandable_product_filter_panel",
+<snip>
+``
 
 **Step 7** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded) and make pages.
 
