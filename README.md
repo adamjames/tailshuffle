@@ -5,7 +5,10 @@ Many thanks of course to [@tailwindlabs](https://github.com/tailwindlabs) for th
 
 ## Notice
 Using this tool requires an active [Tailwind Plus](https://tailwindcss.com/plus) subscription. 
-You are responsible for complying with the [terms of service](https://tailwindcss.com/plus/terms).
+You are responsible for complying with the [terms of service](https://tailwindcss.com/plus/license)
+
+## License
+MIT — see [LICENSE](LICENSE).
 
 ## Usage
 ```bash
@@ -51,6 +54,3 @@ npx shuffle-package-maker /path/to/tailwindui-crawler/output/html/components --p
 Note that the crawler outputs to `html/ui-blocks/`, not `html/components/` as the shuffle-package-maker docs suggest.
 
 **Step 3** — Zip the output and [upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
-
-## License
-MIT — see [LICENSE](LICENSE).
