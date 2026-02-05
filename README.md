@@ -1,4 +1,4 @@
-# Shuffle.dev Tailwind UI Package Builder
+# Tailshuffle.sh
 
 The two upstream tools — `tailwindui-crawler` and `shuffle-package-maker` — each do their own job well. The [crawler](https://github.com/kiliman/tailwindui-crawler) downloads Tailwind UI components; [shuffle-package-maker](https://www.npmjs.com/package/shuffle-package-maker) packs up the HTML into shuffle.dev's custom library format.
 
@@ -7,19 +7,19 @@ The manual steps are straightforward enough - this repository ties it all togeth
 ## Usage
 
 ```bash
-./build.sh              # show help, offer to run full pipeline
-./build.sh all          # full interactive pipeline
+./tailshuffle.sh              # show help, offer to run full pipeline
+./tailshuffle.sh all          # full interactive pipeline
 
 ## Or, run individual steps
-./build.sh build        # build the Docker image
-./build.sh download     # download components
-./build.sh convert      # convert to shuffle format
-./build.sh catalog      # generate components-catalog.json (LLM context)
-./build.sh package      # zip + validate
-./build.sh clean        # remove build artefacts
+./tailshuffle.sh build        # build the Docker image
+./tailshuffle.sh download     # download components
+./tailshuffle.sh convert      # convert to shuffle format
+./tailshuffle.sh catalog      # generate components-catalog.json (LLM context)
+./tailshuffle.sh package      # zip + validate
+./tailshuffle.sh clean        # remove build artefacts
 ```
 
-Downloaded components are cached in `cache/` so subsequent builds skip the download.
+The final output is `tailwind-shuffle-components.zip`, ready to upload. Downloaded components are cached in `cache/` so subsequent builds skip the download.
 
 ## Debugging
 
@@ -51,4 +51,12 @@ npx shuffle-package-maker /path/to/tailwindui-crawler/output/html/components --p
 
 Note that the crawler outputs to `html/ui-blocks/`, not `html/components/` as the shuffle-package-maker docs suggest.
 
-**Step 3** — Zip the output and upload to shuffle.dev → Settings → Libraries.
+**Step 3** — Zip the output and [upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded).
+
+## Notice
+
+Using this tool requires an active [Tailwind UI](https://tailwindcss.com/plus) subscription. You are responsible for complying with their [terms of service](https://tailwindcss.com/plus/terms).
+
+## License
+
+MIT — see [LICENSE](LICENSE).

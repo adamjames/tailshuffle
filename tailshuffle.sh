@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+# Tailshuffle.sh — Download Tailwind UI components and package them for Shuffle.dev
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-IMAGE_NAME="tailwindui-shuffle-builder"
-CONTAINER_NAME="tailwindui-shuffle-run"
+IMAGE_NAME="tailshuffle"
+CONTAINER_NAME="tailshuffle-builder"
 WORK_DIR="$SCRIPT_DIR/cache"
 DOCKER_USER="--user $(id -u):$(id -g)"
 
@@ -195,7 +196,7 @@ stage_download() {
 }
 
 stage_convert() {
-    step "5a" "Converting to shuffle.dev format"
+    step "5a" "Converting to Shuffle.dev format"
 
     require "$DOCKER image inspect $IMAGE_NAME" build "Docker image '$IMAGE_NAME' not found"
     require "test -d $WORK_DIR/html" download "No cached components found"
@@ -230,18 +231,40 @@ stage_catalog() {
 stage_package() {
     step "5c" "Packaging"
 
+    require "$DOCKER image inspect $IMAGE_NAME" build "Docker image '$IMAGE_NAME' not found"
     require "test -f $SCRIPT_DIR/output/output.zip" convert "No output.zip found"
 
-    cp "$SCRIPT_DIR/output/output.zip" "$SCRIPT_DIR/tailwindui-shuffle.zip"
+    # Brand the library metadata inside the zip
+    local email
+    email=$(grep '^EMAIL=' "$SCRIPT_DIR/.env" | cut -d= -f2-)
+
+    cmd="$DOCKER run --rm $DOCKER_USER -e HOME=/tmp \\
+          -e LIBRARY_NAME='Tailwind UI Pro' \\
+          -e LIBRARY_DESC='$email' \\
+          -v $SCRIPT_DIR/output:/app/output \\
+          -w /tmp \\
+          $IMAGE_NAME sh -c '
+            unzip -o /app/output/output.zip shuffle.config.json &&
+            sed -i \\
+              -e \"s|Tailwind UI all components|\$LIBRARY_DESC|\" \\
+              -e \"s|Tailwind UI All|\$LIBRARY_NAME|\" \\
+              shuffle.config.json &&
+            zip -d /app/output/output.zip shuffle.config.json &&
+            zip /app/output/output.zip shuffle.config.json'"
+    info "$(dim "\$ $cmd")"
+    eval "$cmd" 2>&1 | while IFS= read -r line; do info "$(dim "$line")"; done
+    ok "Library branded as \"Tailwind UI Pro\" ($email)"
+
+    cp "$SCRIPT_DIR/output/output.zip" "$SCRIPT_DIR/tailwind-shuffle-components.zip"
     ok "Package created"
 
-    html_count=$(unzip -l "$SCRIPT_DIR/tailwindui-shuffle.zip" | grep -c '\.html$' || true)
+    html_count=$(unzip -l "$SCRIPT_DIR/tailwind-shuffle-components.zip" | grep -c '\.html$' || true)
     if [ "$html_count" -eq 0 ]; then
         fail "Zip file appears to be empty or invalid"
         exit 1
     fi
 
-    zip_size=$(du -h "$SCRIPT_DIR/tailwindui-shuffle.zip" | cut -f1)
+    zip_size=$(du -h "$SCRIPT_DIR/tailwind-shuffle-components.zip" | cut -f1)
     ok "Validated: $html_count components, $zip_size"
 }
 
@@ -252,13 +275,11 @@ stage_done() {
   │  $(green "Build complete!")                            │
   └─────────────────────────────────────────────┘
 
-  Your package:  $(bold "./tailwindui-shuffle.zip")  ($zip_size, $html_count components)
+  Your package:  $(bold "./tailwind-shuffle-components.zip")  ($zip_size, $html_count components)
 
   To upload:
-    1. Go to $(cyan "https://shuffle.dev")
-    2. Open $(bold "Settings → Libraries")
-    3. Click $(bold "Upload Custom Library")
-    4. Select tailwindui-shuffle.zip
+    1. Go to $(cyan "https://shuffle.dev/dashboard#/libraries/uploaded")
+    2. Upload tailwind-shuffle-components.zip
 
   Cached downloads are in ./cache/
   Run this script again to rebuild without re-downloading.
@@ -284,8 +305,8 @@ fi
 
 case "${1:-}" in
     clean)
-        info "Removing output, tailwindui-shuffle.zip, and build container..."
-        rm -rf "$SCRIPT_DIR/output" "$SCRIPT_DIR/tailwindui-shuffle.zip"
+        info "Removing output, tailwind-shuffle-components.zip, and build container..."
+        rm -rf "$SCRIPT_DIR/output" "$SCRIPT_DIR/tailwind-shuffle-components.zip"
         ${DOCKER:-docker} rm -f "$CONTAINER_NAME" 2>/dev/null || true
         ok "Clean"
         ;;
@@ -314,7 +335,7 @@ case "${1:-}" in
         cat <<'BANNER'
 
   ┌─────────────────────────────────────────────┐
-  │  Shuffle.dev  ·  Tailwind UI Package Builder │
+  │  Tailshuffle.sh                              │
   └─────────────────────────────────────────────┘
 
   This script will:
@@ -322,7 +343,7 @@ case "${1:-}" in
     1. Check prerequisites (Docker)
     2. Set up your Tailwind UI credentials
     3. Download components via tailwindui-crawler
-    4. Convert them to shuffle.dev format
+    4. Convert them to Shuffle.dev format
     5. Package everything into a zip
 
 BANNER
@@ -363,6 +384,8 @@ BANNER
         stage_done
         ;;
     *)
+        echo "Tailshuffle.sh — Download Tailwind UI components and package them for Shuffle.dev"
+        echo ""
         echo "Usage: $0 [build|download|convert|catalog|package|clean|all]"
         echo ""
         echo "  build      Build the Docker image"
