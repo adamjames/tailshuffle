@@ -23,7 +23,6 @@ The final output is `tailwind-shuffle-components.zip`, ready to upload. Componen
 
 Once you're done, you can build using the Pro components inside of Shuffle as you please.
 
-<img alt="The Shuffle dashboard showing an uploaded component pack" src="https://github.com/user-attachments/assets/93c08fda-afa6-4e0f-aded-00074a8cd35f" />
 <img alt="An example page using the Tailwind Pro components" src="https://github.com/user-attachments/assets/06df903c-746e-4b3a-8b94-3ebf4dd936e4" />
 
 ## Manual Steps
@@ -99,6 +98,8 @@ node catalog.mjs
 ```
 
 **Step 7** — [Upload to Shuffle.dev](https://shuffle.dev/dashboard#/libraries/uploaded) and make pages.
+
+<img alt="The Shuffle dashboard showing an uploaded component pack" src="https://github.com/user-attachments/assets/93c08fda-afa6-4e0f-aded-00074a8cd35f" />
 
 ## Debugging
 I've tested this fairly extensively, at least in Docker, though Podman should work wihout issue. That said, if you do run into anything...
