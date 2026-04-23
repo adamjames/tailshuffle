@@ -44,7 +44,7 @@ ask() {
         printf '        %s: ' "$prompt"
     fi
     read -r REPLY
-    [ -z "$REPLY" ] && REPLY="$default"
+    [ -z "$REPLY" ] && REPLY="$default" || true
 }
 
 confirm() {
@@ -204,13 +204,75 @@ stage_convert() {
     rm -rf "$SCRIPT_DIR/output"
     mkdir "$SCRIPT_DIR/output"
 
-    cmd="$DOCKER run --rm $DOCKER_USER -e HOME=/tmp \\
-          -v $WORK_DIR/html/ui-blocks:/app/input:ro \\
-          -v $SCRIPT_DIR/output:/app/output \\
-          -w /app \\
-          $IMAGE_NAME shuffle-package-maker /app/input --preset=tailwindui"
-    info "$(dim "\$ $cmd")"
-    eval "$cmd" 2>&1 | while IFS= read -r line; do info "$(dim "$line")"; done
+    local input_base="$WORK_DIR/html/ui-blocks"
+    local categories=()
+    local presets=()
+
+    # Detect which categories were downloaded
+    if [ -d "$input_base/application-ui" ]; then
+        categories+=("application-ui")
+        presets+=("tailwindui-application-ui")
+    fi
+    if [ -d "$input_base/marketing" ]; then
+        categories+=("marketing")
+        presets+=("tailwindui-marketing")
+    fi
+    if [ -d "$input_base/ecommerce" ]; then
+        categories+=("ecommerce")
+        presets+=("tailwindui-ecommerce")
+    fi
+
+    if [ ${#categories[@]} -eq 0 ]; then
+        fail "No component categories found in $input_base"
+        exit 1
+    fi
+
+    # If all three categories exist, use the combined preset
+    if [ ${#categories[@]} -eq 3 ]; then
+        info "Found all categories, using combined preset"
+        cmd="$DOCKER run --rm $DOCKER_USER -e HOME=/tmp \\
+              -v $input_base:/app/input:ro \\
+              -v $SCRIPT_DIR/output:/app/output \\
+              -w /app \\
+              $IMAGE_NAME shuffle-package-maker /app/input --preset=tailwindui"
+        info "$(dim "\$ $cmd")"
+        eval "$cmd" 2>&1 | while IFS= read -r line; do info "$(dim "$line")"; done
+    else
+        # Process each category separately and merge
+        info "Found categories: ${categories[*]}"
+        local first=true
+        for i in "${!categories[@]}"; do
+            local cat="${categories[$i]}"
+            local preset="${presets[$i]}"
+            info "Converting $cat..."
+
+            local out_dir="$SCRIPT_DIR/output-$cat"
+            rm -rf "$out_dir"
+            mkdir -p "$out_dir"
+
+            # Mount the parent ui-blocks dir so the preset can find the category subdir
+            cmd="$DOCKER run --rm $DOCKER_USER -e HOME=/tmp \\
+                  -v $input_base:/app/input:ro \\
+                  -v $out_dir:/app/output \\
+                  -w /app \\
+                  $IMAGE_NAME shuffle-package-maker /app/input --preset=$preset"
+            info "$(dim "\$ $cmd")"
+            eval "$cmd" 2>&1 | while IFS= read -r line; do info "$(dim "$line")"; done
+
+            if [ "$first" = true ]; then
+                # First category: move output to main output dir
+                mv "$out_dir"/* "$SCRIPT_DIR/output/" 2>/dev/null || true
+                first=false
+            else
+                # Subsequent categories: merge into main output
+                if [ -d "$out_dir/components" ]; then
+                    cp -r "$out_dir/components"/* "$SCRIPT_DIR/output/components/" 2>/dev/null || true
+                fi
+            fi
+            rm -rf "$out_dir"
+        done
+    fi
+
     ok "Conversion complete"
 }
 
