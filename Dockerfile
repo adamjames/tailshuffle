@@ -10,7 +10,7 @@ RUN git clone https://github.com/kiliman/tailwindui-crawler.git \
 
 COPY --chmod=644 fix-crawler-deps.patch ./
 
-RUN npm install -g npm@latest shuffle-package-maker
+RUN npm install -g shuffle-package-maker
 
 WORKDIR /app/tailwindui-crawler
 RUN git apply /app/fix-crawler-deps.patch \
